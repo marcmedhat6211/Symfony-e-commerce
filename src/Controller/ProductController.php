@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/product", name="product.")
+ * @Route("/admin/product", name="product.")
  */
 class ProductController extends AbstractController
 {
@@ -59,6 +59,7 @@ class ProductController extends AbstractController
             
             //handling multiple images
             $files = $form['images']->getData();
+            $mainImage = '';
             foreach($files as $file) {
                 $image = new Image();
                 $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
@@ -66,10 +67,14 @@ class ProductController extends AbstractController
                     $this->getParameter('uploads_dir'),
                     $fileName
                 );
+                $mainImage = $fileName;
                 $image->setImage($fileName);
                 $image->setProduct($product);
                 $em->persist($image);
             }
+            // dd($mainImage);
+            $product->setMainImage($mainImage);
+            $em->persist($product);
             $em->flush();
             $this->addFlash('success', 'Product added successfuly');
 
