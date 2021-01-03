@@ -57,6 +57,11 @@ class Product
     */
     private $image;
 
+    /**
+    * @ORM\Column(type="string", length=255)
+    */
+    private $mainImage;
+
     public function __construct()
     {
         $this->image = new ArrayCollection();
@@ -171,5 +176,17 @@ class Product
 
     public function __toString() {
         return $this->name;
+    }
+
+    public function getMainImage(): ?string
+    {
+        return $this->mainImage;
+    }
+
+    public function setMainImage(string $mainImage): self
+    {
+        $this->mainImage = $mainImage;
+
+        return $this;
     }
 }

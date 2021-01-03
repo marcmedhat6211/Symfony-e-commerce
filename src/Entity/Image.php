@@ -23,7 +23,8 @@ class Image
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="image")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="image", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $product;
 
