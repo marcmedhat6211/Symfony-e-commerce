@@ -7,15 +7,15 @@
 
       <!--bootstrap card with 3 horizontal images-->
       <div class="row"> 
-          <div class="card col-md-4"> 
+          <!-- <div class="card col-md-4">  -->
             <div class="card-body"> 
-              <h3 class="card-title">{{ product.name }}</h3> 
-              <p class="card-text">{{ product.description }}</p>
+              <h3 style="text-align: center;" class="card-title">{{ product.name }}</h3> 
               {% for image in  images %}
-                <img class="size" src="{{ '/uploads/' ~ image }}" alt="">
+                <img style="height: 60%; width: 25%" src="{{ '/uploads/' ~ image }}" alt="">
               {% endfor %}
+              <p style="text-align: center;" class="card-text">{{ product.description }}</p>
             </div>
-          </div>
+          <!-- </div> -->
       </div> 
   </div> 
 </div> 
