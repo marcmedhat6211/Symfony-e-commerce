@@ -5,3 +5,9 @@
 .extreme-right {
     margin-left: 1600px;
 }
+
+.size { 
+    max-width: 50%;
+    max-height: 50%; 
+    padding-top:10px; 
+}

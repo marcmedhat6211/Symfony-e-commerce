@@ -2,13 +2,22 @@
 
 {% block body %}
 
-<div class="card" style="width: 18rem;">
-    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-    <div class="card-body">
-      <h5 class="card-title">{{ product.name }}</h5>
-      <p class="card-text">{{ product.description }}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div>
+<div class="container"> 
+  <div class="card-group">
+
+      <!--bootstrap card with 3 horizontal images-->
+      <div class="row"> 
+          <div class="card col-md-4"> 
+            <div class="card-body"> 
+              <h3 class="card-title">{{ product.name }}</h3> 
+              <p class="card-text">{{ product.description }}</p>
+              {% for image in  images %}
+                <img class="size" src="{{ '/uploads/' ~ image }}" alt="">
+              {% endfor %}
+            </div>
+          </div>
+      </div> 
+  </div> 
+</div> 
 
 {% endblock %}

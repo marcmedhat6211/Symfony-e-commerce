@@ -7,6 +7,7 @@ use App\Entity\Product;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +21,13 @@ class CreateProductFormType extends AbstractType
             ->add('description')
             ->add('category', EntityType::class, [
                 'class' => Category::class
+            ])
+            ->add('images', FileType::class, [
+                'mapped' => false,
+                'multiple' => true,
+                'attr' => [
+                    'class' => 'custom-file-input'
+                ]
             ])
             ->add('code')
             ->add('stock')

@@ -19,6 +19,26 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function getImages(Product $product) {
+        $conn = $this->getEntityManager()->getConnection();
+        $id = $product->getId();
+        $sql = 'SELECT image
+                FROM image i
+                WHERE i.product_id = :id'
+                ;
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $arrays = $stmt->fetchAllAssociative();
+        $images = [];
+        foreach($arrays as $array) {
+            if(isset($array["image"])) {
+                array_push($images, $array["image"]);
+            }
+        }
+
+        return $images;
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

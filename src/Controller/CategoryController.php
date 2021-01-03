@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Image;
 use App\Form\CreateCategoryFormType;
 use App\Form\EditCategoryFormType;
 use App\Repository\CategoryRepository;
