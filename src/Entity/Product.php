@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -36,6 +37,7 @@ class Product
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $stock;
 
@@ -51,6 +53,7 @@ class Product
 
     /**
     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
+    * @Assert\NotBlank
     */
     private $image;
 
