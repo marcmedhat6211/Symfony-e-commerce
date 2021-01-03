@@ -13,13 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin/product", name="product.")
- */
+
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * @Route("admin/product", name="product.index")
      */
     public function index(ProductRepository $productRepository): Response
     {
@@ -32,7 +30,7 @@ class ProductController extends AbstractController
 
 
     /**
-     * @Route("/show/{id}", name="show")
+     * @Route("product/show/{id}", name="product.show")
      */
     public function show(Product $product, ProductRepository $productRepository) {
         $images = $productRepository->getImages($product);
@@ -46,7 +44,7 @@ class ProductController extends AbstractController
 
 
     /**
-    * @Route("/create", name="create")
+    * @Route("admin/product/create", name="product.create")
     */
     public function create(Request $request) {
         $product = new Product();
@@ -89,7 +87,7 @@ class ProductController extends AbstractController
 
 
     /**
-    * @Route("/edit/{id}", name="edit")
+    * @Route("admin/product/edit/{id}", name="product.edit")
     */
     public function edit(Request $request, Product $product) {
         $form = $this->createForm(EditProductFormType::class, $product);
@@ -124,7 +122,7 @@ class ProductController extends AbstractController
 
     
     /**
-    * @Route("/destroy/{id}", name="destroy")
+    * @Route("admin/product/destroy/{id}", name="product.destroy")
     */
     public function destroy(Product $product) {
         $em = $this->getDoctrine()->getManager();
