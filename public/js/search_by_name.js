@@ -1,14 +1,14 @@
+//getting product names from twig file
 const entryElements = document.querySelectorAll('[data-product-name]');
 const productNames = Array.from(entryElements).map(
                         item => item.dataset.productName
                     );
-console.log(productNames);
 
+//getting product ids from twig file
 const entryElements2 = document.querySelectorAll('[data-product-id]');
 const productIds = Array.from(entryElements2).map(
                         item => item.dataset.productId
                     );
-console.log(productIds);
 
 //putting products ids and product names in one object
 var keys = productIds;
@@ -16,30 +16,29 @@ var values = productNames;
 var result = {};
 keys.forEach((key, i) => result[key] = values[i]);
 
+//getting ids by passing the product's name so i can set the route when the user presses the search result
 function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
+// console.log(getKeyByValue(result, 'product One'));
 
 const list = document.getElementById('list');
 function setList(group) {
     clearList();
-    for (const product of group) {
-        // console.log(product);
-        let i = 0;
+    for (const productName of group) {
         //creating list item
         const item = document.createElement('li');
         item.classList.add('list-group-item');
-
         //creating anchor item
+        // console.log(getKeyByValue(result, productName));
         const anchor = document.createElement('a');
-        anchor.href = `/product/show/${getKeyByValue(result, product)}`;
+        anchor.href = `/product/show/${getKeyByValue(result, productName)}`;
         anchor.style.cssText = "cursor: pointer; text-decoration:none; color: black";
         item.appendChild(anchor);
-
-        const text = document.createTextNode(product);
+        
+        const text = document.createTextNode(productName);
         anchor.appendChild(text);
         list.appendChild(item);
-        i++;
     }
     if (group.length === 0) {
         setNoResults();
@@ -55,7 +54,7 @@ function clearList() {
 function setNoResults() {
     const item = document.createElement('li');
     item.classList.add('list-group-item');
-    const text = document.createTextNode('No results found');
+    const text = document.createTextNode('No such name...');
     item.appendChild(text);
     list.appendChild(item);
 }
@@ -78,10 +77,10 @@ searchInput.addEventListener('input', (event) => {
     let value = event.target.value;
     if (value && value.trim().length > 0) {
         value = value.trim().toLowerCase();
-        setList(productNames.filter(product => {
-            return product.includes(value);
-        }).sort((productA, productB) => {
-            return getRelevancy(productB, value) - getRelevancy(productA, value);
+        setList(productNames.filter(productName => {
+            return productName.includes(value);
+        }).sort((productNameA, productNameB) => {
+            return getRelevancy(productNameB, value) - getRelevancy(productNameA, value);
         }));
     } else {
         clearList();
