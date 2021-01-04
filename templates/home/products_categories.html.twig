@@ -29,11 +29,11 @@
                 <div class="col-md-3 col-sm-4">
                     <div class="single-new-arrival">
                         <div class="single-new-arrival-bg">
-                            <img class="test" src="{{ '/uploads/' ~ product.main_image }}"
+                                <img class="test" src="{{ '/uploads/' ~ product.main_image }}"
                                 alt="products images">
                             <div class="single-new-arrival-bg-overlay"></div>
                         </div>
-                        <h4><a data-product-name="{{ product.name }}" href="{{ path('product.show', {id: product.id}) }}">{{ product.name }}</a></h4>
+                        <h4><a style="text-decoration: none;" data-product-name="{{ product.name }}" href="{{ path('product.show', {id: product.id}) }}">{{ product.name }}</a></h4>
                         <p class="arrival-product-price">${{ product.price }}</p>
                     </div>
                 </div>
