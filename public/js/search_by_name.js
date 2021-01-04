@@ -20,7 +20,6 @@ keys.forEach((key, i) => result[key] = values[i]);
 function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
-// console.log(getKeyByValue(result, 'product One'));
 
 const list = document.getElementById('list');
 function setList(group) {
