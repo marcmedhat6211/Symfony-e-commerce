@@ -13,6 +13,10 @@
               {% for image in  images %}
                 <img style="height: 60%; width: 25%" src="{{ '/uploads/' ~ image }}" alt="">
               {% endfor %}
+              <h3 style="text-align: center;">Available Sizes</h3>
+              <label for="small">Small</label><p id="small">{{ sizes.small }}</p>
+              <label for="medium">Medium</label><p id="medium">{{ sizes.medium }}</p>
+              <label for="large">Large</label><p id="large">{{ sizes.large }}</p>
               <p style="text-align: center;" class="card-text">{{ product.description }}</p>
             </div>
           <!-- </div> -->

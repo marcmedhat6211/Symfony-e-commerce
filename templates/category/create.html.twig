@@ -4,5 +4,7 @@
     <br>
     <h2 style="text-align: center;">Create Category</h2>
     <br>
-    {{ form(form) }}
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+    {{ form_end(form) }}
 {% endblock %}
