@@ -71,10 +71,6 @@ class ProductController extends AbstractController
             $size->setProduct($product);
             $em->persist($size);
 
-            if($small + $medium + $large != $stock) {
-                return new Response('The sum of small, medium, and large sizes should equal the stock value');
-            }
-
             // dd($small);
             $mainImage = '';
             foreach($files as $file) {

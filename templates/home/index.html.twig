@@ -179,6 +179,15 @@
     }
 </style>
 
+<!-- getting the ids to use them in js file -->
+{% for product in products %}
+    <div hidden data-product-id="{{ product.id }}"></div>
+{% endfor %}
+
+{% for product in products %}
+    <div hidden data-product="{{ product }}"></div>
+{% endfor %}
+
 <section id="products" class="products">
     <div class="container">
         <div class="section-header">

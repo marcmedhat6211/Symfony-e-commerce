@@ -2,16 +2,44 @@ const entryElements = document.querySelectorAll('[data-product-name]');
 const productNames = Array.from(entryElements).map(
                         item => item.dataset.productName
                     );
+console.log(productNames);
+
+const entryElements2 = document.querySelectorAll('[data-product-id]');
+const productIds = Array.from(entryElements2).map(
+                        item => item.dataset.productId
+                    );
+console.log(productIds);
+
+//putting products ids and product names in one object
+var keys = productIds;
+var values = productNames;
+var result = {};
+keys.forEach((key, i) => result[key] = values[i]);
+
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
 
 const list = document.getElementById('list');
 function setList(group) {
     clearList();
     for (const product of group) {
+        // console.log(product);
+        let i = 0;
+        //creating list item
         const item = document.createElement('li');
         item.classList.add('list-group-item');
+
+        //creating anchor item
+        const anchor = document.createElement('a');
+        anchor.href = `/product/show/${getKeyByValue(result, product)}`;
+        anchor.style.cssText = "cursor: pointer; text-decoration:none; color: black";
+        item.appendChild(anchor);
+
         const text = document.createTextNode(product);
-        item.appendChild(text);
+        anchor.appendChild(text);
         list.appendChild(item);
+        i++;
     }
     if (group.length === 0) {
         setNoResults();
