@@ -26,7 +26,7 @@
         {% for product in products %}
             <tr>
                 <td>{{ product.category }}</td>
-                <td>{{ product.name }}</td>
+                <td data-product-name="{{ product.name }}">{{ product.name }}</td>
                 <td>{{ product.code }}</td>
                 <td>{{ product.stock }}</td>
                 <td>

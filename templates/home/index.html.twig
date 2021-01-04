@@ -195,7 +195,7 @@
                                 alt="products images">
                             <div class="single-new-arrival-bg-overlay"></div>
                         </div>
-                        <h4><a href="{{ path('product.show', {id: product.id}) }}">{{ product.name }}</a></h4>
+                        <h4><a data-product-name="{{ product.name }}" href="{{ path('product.show', {id: product.id}) }}">{{ product.name }}</a></h4>
                         <p class="arrival-product-price">price</p>
                     </div>
                 </div>
