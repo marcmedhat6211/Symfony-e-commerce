@@ -62,7 +62,6 @@ class ProductController extends AbstractController
             $small = $form['small']->getData();
             $medium = $form['medium']->getData();
             $large = $form['large']->getData();
-            $stock = $form['stock']->getData();
 
             $size = new Size();
             $size->setSmall($small);
@@ -107,12 +106,24 @@ class ProductController extends AbstractController
     /**
     * @Route("admin/product/edit/{id}", name="product.edit")
     */
-    public function edit(Request $request, Product $product) {
+    public function edit(Request $request, Product $product, ProductRepository $productRepository) {
         $form = $this->createForm(EditProductFormType::class, $product);
         $form->handleRequest($request);
         if($form->isSubmitted()) {
             $em = $this->getDoctrine()->getManager();
+            
+            $sizes = $productRepository->getSizes($product);
 
+            $size = new Size();
+
+            $small = $sizes["small"];
+            $medium = $sizes["medium"];
+            $large = $sizes["large"];
+            $size->setSmall($small);
+            $size->setMedium($medium);
+            $size->setLarge($large);
+            $size->setProduct($product);
+            $em->persist($size);
 
             // $files = $form['images']->getData();
             // foreach($files as $file) {

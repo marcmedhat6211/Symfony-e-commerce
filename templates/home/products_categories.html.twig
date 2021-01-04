@@ -12,6 +12,7 @@
 {% endfor %}
 
 <div class="sidenav">
+        <h3 style="text-align: center;">Categories</h3>
         {% for category in categories %}
             <a href="{{ path('home.products_category', {id: category.id}) }}" id="categories">{{ category.name }}</a>
         {% endfor %}
@@ -28,7 +29,7 @@
                 <div class="col-md-3 col-sm-4">
                     <div class="single-new-arrival">
                         <div class="single-new-arrival-bg">
-                            <img class="test" src="{{ '/uploads/' ~ product.mainImage }}"
+                            <img class="test" src="{{ '/uploads/' ~ product.main_image }}"
                                 alt="products images">
                             <div class="single-new-arrival-bg-overlay"></div>
                         </div>

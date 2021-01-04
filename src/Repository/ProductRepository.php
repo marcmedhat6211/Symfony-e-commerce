@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -52,6 +53,20 @@ class ProductRepository extends ServiceEntityRepository
         $sizes = $arrays[0];
 
         return $sizes;
+    }
+
+    public function getProductsCategories(Category $category) {
+        $conn = $this->getEntityManager()->getConnection();
+        $id = $category->getId();
+        $sql = 'SELECT *
+                FROM product p
+                WHERE p.category_id = :id'
+                ;
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $products = $stmt->fetchAllAssociative();
+
+        return $products;
     }
 
     // /**
