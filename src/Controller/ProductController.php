@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Image;
 use App\Entity\Product;
+use App\Entity\Size;
 use App\Form\CreateProductFormType;
 use App\Form\EditProductFormType;
 use App\Repository\ImageRepository;
@@ -34,11 +35,12 @@ class ProductController extends AbstractController
      */
     public function show(Product $product, ProductRepository $productRepository) {
         $images = $productRepository->getImages($product);
-        // dd($images);
+        $sizes = $productRepository->getSizes($product);
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
-            'images' => $images
+            'images' => $images,
+            'sizes' => $sizes
         ]);
     }
 
@@ -55,8 +57,25 @@ class ProductController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             
-            //handling multiple images
+            //getting other tables data from form
             $files = $form['images']->getData();
+            $small = $form['small']->getData();
+            $medium = $form['medium']->getData();
+            $large = $form['large']->getData();
+            $stock = $form['stock']->getData();
+
+            $size = new Size();
+            $size->setSmall($small);
+            $size->setMedium($medium);
+            $size->setLarge($large);
+            $size->setProduct($product);
+            $em->persist($size);
+
+            if($small + $medium + $large != $stock) {
+                return new Response('The sum of small, medium, and large sizes should equal the stock value');
+            }
+
+            // dd($small);
             $mainImage = '';
             foreach($files as $file) {
                 $image = new Image();
@@ -70,7 +89,10 @@ class ProductController extends AbstractController
                 $image->setProduct($product);
                 $em->persist($image);
             }
-            // dd($mainImage);
+
+            //handling multiple sizes
+
+
             $product->setMainImage($mainImage);
             $em->persist($product);
             $em->flush();
