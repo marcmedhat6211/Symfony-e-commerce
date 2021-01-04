@@ -24,6 +24,7 @@ class EditProductFormType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class
             ])
+            ->add('price')
             ->add('images', FileType::class, [
                 'mapped' => false,
                 'multiple' => true,

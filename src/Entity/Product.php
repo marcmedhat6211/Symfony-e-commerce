@@ -31,6 +31,11 @@ class Product
     private $description;
 
     /**
+     * @ORM\Column(type="float")
+     */
+    private $price;
+
+    /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $code;
@@ -222,6 +227,18 @@ class Product
                 $size->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }
