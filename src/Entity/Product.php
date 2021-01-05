@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @UniqueEntity("code",
+ *              message="This code is already taken by another product")
  */
 class Product
 {
@@ -22,37 +25,45 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank
+     * @Assert\Positive
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank
      */
     private $code;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\PositiveOrZero
+     * @Assert\NotBlank
      */
     private $stock;
 
     /**
      * @ORM\Column(type="boolean", options={"default" : 1})
+     * @Assert\NotBlank
      */
     private $availability;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="product")
+     * @Assert\NotBlank
      */
     private $category;
 
