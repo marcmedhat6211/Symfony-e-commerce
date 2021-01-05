@@ -9,10 +9,13 @@
   <div class="card">
     <h2>{{ product.name }}</h2>
     <h5>${{ product.price }}</h5>
+    <br>
+    <h6><strong>Product Code: </strong>{{ product.code }}</h6>
     <h6><strong>Left in stock: </strong>{{ product.stock }}</h6>
     <h6><strong>Small sizes in stock: </strong>{{ sizes.small }}</h6>
     <h6><strong>Medium sizes in stock: </strong>{{ sizes.medium }}</h6>
     <h6><strong>Large sizes in stock: </strong>{{ sizes.large }}</h6>
+    <br>
     <p>{{ product.description }}</p>
   </div>
 </div>
