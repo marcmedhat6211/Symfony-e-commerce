@@ -9,6 +9,7 @@ use App\Form\CreateProductFormType;
 use App\Form\EditProductFormType;
 use App\Repository\ImageRepository;
 use App\Repository\ProductRepository;
+use App\Services\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,7 @@ class ProductController extends AbstractController
     /**
     * @Route("admin/product/create", name="product.create")
     */
-    public function create(Request $request, ValidatorInterface $validator) {
+    public function create(Request $request, ValidatorInterface $validator, FileUploader $fileUploader) {
         $product = new Product();
         $form = $this->createForm(CreateProductFormType::class, $product);
         $form->handleRequest($request);
@@ -81,11 +82,7 @@ class ProductController extends AbstractController
                 $mainImage = '';
                 foreach($files as $file) {
                     $image = new Image();
-                    $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
-                    $file->move(
-                        $this->getParameter('uploads_dir'),
-                        $fileName
-                    );
+                    $fileName = $fileUploader->uploadFile($file);
                     $mainImage = $fileName;
                     $image->setImage($fileName);
                     $image->setProduct($product);
@@ -124,7 +121,13 @@ class ProductController extends AbstractController
     /**
     * @Route("admin/product/edit/{id}", name="product.edit")
     */
-    public function edit(Request $request, Product $product, ProductRepository $productRepository, ValidatorInterface $validator) {
+    public function edit(
+        Request $request, 
+        Product $product, 
+        ProductRepository $productRepository, 
+        ValidatorInterface $validator,
+        FileUploader $fileUploader
+        ) {
         $form = $this->createForm(EditProductFormType::class, $product);
         $images = $productRepository->getImages($product);
 
@@ -153,11 +156,7 @@ class ProductController extends AbstractController
             $files = $form['images']->getData();
             foreach($files as $file) {
                 $image = new Image();
-                $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
-                $file->move(
-                    $this->getParameter('uploads_dir'),
-                    $fileName
-                );
+                $fileName = $fileUploader->uploadFile($file);
                 $image->setImage($fileName);
                 $image->setProduct($product);
                 $em->persist($image);
@@ -186,8 +185,7 @@ class ProductController extends AbstractController
     public function destroy(Product $product) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($product);
-        $em->flush();
-        
+        $em->flush();   
         $this->addFlash('success', 'Product deleted');
         
         return $this->redirect($this->generateUrl('product.index'));
