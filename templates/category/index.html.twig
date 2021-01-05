@@ -23,7 +23,6 @@
             <tr>
                 <td>{{ category.name }}</td>
                 <td>
-                    <a class="btn btn-success btn-sm" href="{{ path('category.show', {id: category.id}) }}">View</a>
                     <a class="btn btn-primary btn-sm" href="{{ path('category.edit', {id: category.id}) }}">Edit</a>
                     <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category ?')" href="{{ path('category.destroy', {id: category.id}) }}">Delete</a>
                 </td>

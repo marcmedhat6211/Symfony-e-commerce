@@ -4,5 +4,9 @@
     <br>
     <h2 style="text-align: center;">Edit Category</h2>
     <br>
-    {{ form(form) }}
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        <br>
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
 {% endblock %}

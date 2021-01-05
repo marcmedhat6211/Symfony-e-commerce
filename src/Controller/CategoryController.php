@@ -31,16 +31,6 @@ class CategoryController extends AbstractController
 
 
     /**
-    * @Route("/show/{id}", name="show")
-    */
-    public function show(Category $category) {
-        return $this->render('category/show.html.twig', [
-            'category' => $category
-        ]);
-    }
-
-
-    /**
     * @Route("/create", name="create")
     */
     public function create(Request $request, ValidatorInterface $validator) {
