@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -38,7 +39,7 @@ class UserController extends AbstractController
     /**
      * @Route("/admin/user/create", name="user.create")
      */
-    public function create(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder) {
+    public function create(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator) {
         $user = new User();
         $form = $this->createForm(RegisterUserFormType::class, $user);
         $form->handleRequest($request);
@@ -51,12 +52,21 @@ class UserController extends AbstractController
                 $passwordEncoder->encodePassword($user, $user->getPassword())
             );
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-            $this->addFlash('success', 'User added successfuly');
+            $errors = $validator->validate($user);
+            if($form->isValid()) {
 
-            return $this->redirect($this->generateUrl('user.index'));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'User added successfuly');
+
+                return $this->redirect($this->generateUrl('user.index'));
+            } else {
+                return $this->render('registration/index.html.twig', [
+                    'errors' => $errors,
+                    'form' => $form->createView()
+                ]);
+            }
         }
 
         return $this->render('registration/index.html.twig', [
@@ -67,11 +77,12 @@ class UserController extends AbstractController
     /**
      * @Route("/user/edit/{id}", name="user.edit")
      */
-    public function edit(Request $request ,User $user, UserPasswordEncoderInterface $passwordEncoder, Security $security) {
+    public function edit(Request $request ,User $user, UserPasswordEncoderInterface $passwordEncoder, Security $security, ValidatorInterface $validator) {
         $currentUserRole = $security->getUser()->getRoles();
         $form = $this->createForm(RegisterUserFormType::class, $user);
         $form->handleRequest($request);
 
+        
         if($form->isSubmitted()) {
             $user->setName($user->getName());
             $user->setEmail($user->getEmail());
@@ -80,16 +91,25 @@ class UserController extends AbstractController
                 $passwordEncoder->encodePassword($user, $user->getPassword())
             );
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-            $this->addFlash('success', 'User Edited successfuly');
+            $errors = $validator->validate($user);
             
-            //redirection page depending on the current authenticated user role
-            if($currentUserRole[0] == "ROLE_ADMIN") {
-                return $this->redirect($this->generateUrl('user.index'));
+            if($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'User Edited successfuly');
+                
+                //redirection page depending on the current authenticated user role
+                if($currentUserRole[0] == "ROLE_ADMIN") {
+                    return $this->redirect($this->generateUrl('user.index'));
+                } else {
+                    return $this->redirect($this->generateUrl('home.index'));
+                }
             } else {
-                return $this->redirect($this->generateUrl('home.index'));
+                return $this->render('registration/index.html.twig', [
+                    'errors' => $errors,
+                    'form' => $form->createView()
+                ]);
             }
         }
 
