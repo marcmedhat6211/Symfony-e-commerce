@@ -30,11 +30,11 @@ class RegisterUserFormType extends AbstractType
                 'choices' => 
                 array
                 (
-                    'ROLE_USER' => array
+                    'Normal User' => array
                     (
                         'Yes' => 'ROLE_USER'
                     ),
-                    'ROLE_ADMIN' => array
+                    'Admin' => array
                     (
                         'Yes' => 'ROLE_ADMIN',
                     ),
