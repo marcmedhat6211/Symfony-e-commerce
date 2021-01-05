@@ -115,7 +115,7 @@ class ProductController extends AbstractController
     */
     public function edit(Request $request, Product $product, ProductRepository $productRepository, ValidatorInterface $validator) {
         $form = $this->createForm(EditProductFormType::class, $product);
-        
+
         //putting the sizes data in the form
         $sizes = $productRepository->getSizes($product);
         $form["small"]->setData($sizes["small"]);
@@ -124,8 +124,10 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-
+        //getting the errors from validation
         $errors = $validator->validate($product);
+
+        //checking if the form is submitted and valid
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
@@ -155,7 +157,6 @@ class ProductController extends AbstractController
                 'errors' => $errors
             ]);
         }
-
 
         return $this-> render('product/edit.html.twig', [
             'form' => $form->createView()
