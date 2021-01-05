@@ -113,41 +113,47 @@ class ProductController extends AbstractController
     /**
     * @Route("admin/product/edit/{id}", name="product.edit")
     */
-    public function edit(Request $request, Product $product, ProductRepository $productRepository) {
+    public function edit(Request $request, Product $product, ProductRepository $productRepository, ValidatorInterface $validator) {
         $form = $this->createForm(EditProductFormType::class, $product);
+        
+        //putting the sizes data in the form
+        $sizes = $productRepository->getSizes($product);
+        $form["small"]->setData($sizes["small"]);
+        $form["medium"]->setData($sizes["medium"]);
+        $form["large"]->setData($sizes["large"]);
+
         $form->handleRequest($request);
-        if($form->isSubmitted()) {
+
+
+        $errors = $validator->validate($product);
+        if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            
-            $sizes = $productRepository->getSizes($product);
 
-            $size = new Size();
+            //editing size entity
+            $small = $form["small"]->getData();
+            $medium = $form["medium"]->getData();
+            $large = $form["large"]->getData();
+            $productRepository->editSizes($product, $small, $medium, $large);
 
-            $small = $sizes["small"];
-            $medium = $sizes["medium"];
-            $large = $sizes["large"];
-            $size->setSmall($small);
-            $size->setMedium($medium);
-            $size->setLarge($large);
-            $size->setProduct($product);
-            $em->persist($size);
-
-            // $files = $form['images']->getData();
-            // foreach($files as $file) {
-            //     $image = new Image();
-            //     $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
-            //     $file->move(
-            //         $this->getParameter('uploads_dir'),
-            //         $fileName
-            //     );
-            //     $image->setImage($fileName);
-            //     $image->setProduct($product);
-            //     $em->persist($image);
-            // }
+            //editing image entity
+            $files = $form['images']->getData();
+            foreach($files as $file) {
+                $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
+                $file->move(
+                    $this->getParameter('uploads_dir'),
+                    $fileName
+                );
+                $productRepository->editImages($product, $fileName);
+            }
 
             $em->flush();
             $this->addFlash('success', 'Product Edited successfuly');
             return $this->redirect($this->generateUrl('product.index'));
+        } else {
+            return $this->render('product/edit.html.twig', [
+                'form' => $form->createView(),
+                'errors' => $errors
+            ]);
         }
 
 

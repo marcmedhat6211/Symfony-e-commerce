@@ -69,6 +69,36 @@ class ProductRepository extends ServiceEntityRepository
         return $products;
     }
 
+    public function editSizes(Product $product, $small, $medium, $large) {
+        $conn = $this->getEntityManager()->getConnection();
+        $id = $product->getId();
+        $sql = 'UPDATE size s
+                SET s.small = :small, s.medium = :medium, s.large = :large
+                WHERE s.product_id = :id'
+                ;
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+            'small' => $small,
+            'medium' => $medium,
+            'large' => $large
+            ]);
+    }
+
+    public function editImages(Product $product, $image) {
+        $conn = $this->getEntityManager()->getConnection();
+        $id = $product->getId();
+        $sql_update = 'UPDATE image i
+                SET i.image = :image
+                WHERE i.product_id = :id'
+        ;
+        $stmt = $conn->prepare($sql_update);
+        $stmt->execute([
+            'id' => $id,
+            'image' => $image
+        ]);
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
