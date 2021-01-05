@@ -78,11 +78,11 @@ class UserController extends AbstractController
      * @Route("/user/edit/{id}", name="user.edit")
      */
     public function edit(Request $request ,User $user, UserPasswordEncoderInterface $passwordEncoder, Security $security, ValidatorInterface $validator) {
+        //getting cuurent user role to use it when rendering on sumbmit
         $currentUserRole = $security->getUser()->getRoles();
         $form = $this->createForm(RegisterUserFormType::class, $user);
         $form->handleRequest($request);
 
-        
         if($form->isSubmitted()) {
             $user->setName($user->getName());
             $user->setEmail($user->getEmail());
@@ -91,6 +91,7 @@ class UserController extends AbstractController
                 $passwordEncoder->encodePassword($user, $user->getPassword())
             );
 
+            //getting errors after validation
             $errors = $validator->validate($user);
             
             if($form->isValid()) {
@@ -106,6 +107,7 @@ class UserController extends AbstractController
                     return $this->redirect($this->generateUrl('home.index'));
                 }
             } else {
+                //if form is not valid
                 return $this->render('registration/index.html.twig', [
                     'errors' => $errors,
                     'form' => $form->createView()

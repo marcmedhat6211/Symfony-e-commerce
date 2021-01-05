@@ -85,18 +85,30 @@ class ProductRepository extends ServiceEntityRepository
             ]);
     }
 
-    public function editImages(Product $product, $image) {
+    public function deleteImage($image) {
         $conn = $this->getEntityManager()->getConnection();
-        $id = $product->getId();
-        $sql_update = 'UPDATE image i
-                SET i.image = :image
-                WHERE i.product_id = :id'
+        $sql_update = 'DELETE FROM image i
+                       WHERE i.image = :image'
         ;
         $stmt = $conn->prepare($sql_update);
         $stmt->execute([
-            'id' => $id,
             'image' => $image
         ]);
+    }
+
+    public function getProductIdByImageName($image) {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql_update = 'SELECT product_id
+                       FROM image i
+                       WHERE i.image = :image'
+        ;
+        $stmt = $conn->prepare($sql_update);
+        $stmt->execute([
+            'image' => $image
+        ]);
+        $product_id = $stmt->fetchAllAssociative();
+
+        return $product_id;
     }
 
     // /**

@@ -126,6 +126,7 @@ class ProductController extends AbstractController
     */
     public function edit(Request $request, Product $product, ProductRepository $productRepository, ValidatorInterface $validator) {
         $form = $this->createForm(EditProductFormType::class, $product);
+        $images = $productRepository->getImages($product);
 
         //putting the old sizes data in the form
         $sizes = $productRepository->getSizes($product);
@@ -151,12 +152,15 @@ class ProductController extends AbstractController
             //editing image entity
             $files = $form['images']->getData();
             foreach($files as $file) {
+                $image = new Image();
                 $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
                 $file->move(
                     $this->getParameter('uploads_dir'),
                     $fileName
                 );
-                $productRepository->editImages($product, $fileName);
+                $image->setImage($fileName);
+                $image->setProduct($product);
+                $em->persist($image);
             }
 
             $em->flush();
@@ -165,26 +169,27 @@ class ProductController extends AbstractController
         } else {
             return $this->render('product/edit.html.twig', [
                 'form' => $form->createView(),
-                'errors' => $errors
+                'errors' => $errors,
+                'images' => $images
             ]);
         }
 
         return $this-> render('product/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     
     /**
-    * @Route("admin/product/destroy/{id}", name="product.destroy")
-    */
+     * @Route("admin/product/destroy/{id}", name="product.destroy")
+     */
     public function destroy(Product $product) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($product);
         $em->flush();
-
+        
         $this->addFlash('success', 'Product deleted');
-
+        
         return $this->redirect($this->generateUrl('product.index'));
     }
 }
