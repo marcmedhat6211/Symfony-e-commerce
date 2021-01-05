@@ -53,49 +53,60 @@ class ProductController extends AbstractController
         $product = new Product();
         $form = $this->createForm(CreateProductFormType::class, $product);
         $form->handleRequest($request);
+
+        //validating product entity
         $errors = $validator->validate($product);
 
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             
-            //getting other tables data from form
+            //getting images and sizes data from form
             $files = $form['images']->getData();
             $small = $form['small']->getData();
             $medium = $form['medium']->getData();
             $large = $form['large']->getData();
 
+            //setting sizes values
             $size = new Size();
             $size->setSmall($small);
             $size->setMedium($medium);
             $size->setLarge($large);
             $size->setProduct($product);
-            $em->persist($size);
+            $sizesErrors = $validator->validate($size);
 
-            // dd($small);
-            $mainImage = '';
-            foreach($files as $file) {
-                $image = new Image();
-                $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
-                $file->move(
-                    $this->getParameter('uploads_dir'),
-                    $fileName
-                );
-                $mainImage = $fileName;
-                $image->setImage($fileName);
-                $image->setProduct($product);
-                $em->persist($image);
+            //if no errors in sizes fields
+            if(count($sizesErrors) == 0) {
+                $em->persist($size);
+                $mainImage = '';
+                foreach($files as $file) {
+                    $image = new Image();
+                    $fileName = md5(uniqid()) . '.' . $file->guessClientExtension();
+                    $file->move(
+                        $this->getParameter('uploads_dir'),
+                        $fileName
+                    );
+                    $mainImage = $fileName;
+                    $image->setImage($fileName);
+                    $image->setProduct($product);
+                    $em->persist($image);
+                }
+
+                //setting the main image that appears in the home page for the user
+                $product->setMainImage($mainImage);
+                $em->persist($product);
+                $em->flush();
+                $this->addFlash('success', 'Product added successfuly');
+
+                return $this->redirect($this->generateUrl('product.index'));
+            //if there are any form validation errors from sizes entity
+            } else {
+                return $this->render('product/create.html.twig', [
+                    'form' => $form->createView(),
+                    'sizesErrors' => $sizesErrors,
+                ]);
             }
-
-            //handling multiple sizes
-
-
-            $product->setMainImage($mainImage);
-            $em->persist($product);
-            $em->flush();
-            $this->addFlash('success', 'Product added successfuly');
-
-            return $this->redirect($this->generateUrl('product.index'));
+        //if there are any form validation errors from products entity
         } else {
             return $this->render('product/create.html.twig', [
                 'form' => $form->createView(),
@@ -103,7 +114,7 @@ class ProductController extends AbstractController
             ]);
         }
 
-
+        //rendering the create form once the create route is hit
         return $this-> render('product/create.html.twig', [
             'form' => $form->createView()
         ]);
@@ -116,7 +127,7 @@ class ProductController extends AbstractController
     public function edit(Request $request, Product $product, ProductRepository $productRepository, ValidatorInterface $validator) {
         $form = $this->createForm(EditProductFormType::class, $product);
 
-        //putting the sizes data in the form
+        //putting the old sizes data in the form
         $sizes = $productRepository->getSizes($product);
         $form["small"]->setData($sizes["small"]);
         $form["medium"]->setData($sizes["medium"]);

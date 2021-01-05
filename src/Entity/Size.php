@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SizeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SizeRepository::class)
@@ -19,16 +20,22 @@ class Size
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero(message="Small should be positive or equal to zero")
      */
     private $small;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero(message="Medium should be positive or equal to zero")
      */
     private $medium;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero(message="Large should be positive or equal to zero")
      */
     private $large;
 
