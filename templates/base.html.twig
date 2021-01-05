@@ -18,6 +18,9 @@
             <ul class="navbar-nav mr-auto">
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('user.index') }}">Manage Users</a>
+                    </li>
+                    <li class="nav-item active">
                         <a class="nav-link" href="{{ path('category.index') }}">Manage Categories</a>
                     </li>
                     <li class="nav-item active">
@@ -26,11 +29,17 @@
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
-                    </li>
-                    <li class="nav-item active">
                         <a class="nav-link" href="{{ path('home.index') }}">Home</a>
                     </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('user.edit', {id: app.user.id}) }}"><i class="fa fa-fw fa-user"></i>Edit Profile</a>
+                    </li>
+                    <div style="float: right;">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+                        </li>
+                    </div>
+
                 {% endif %}
             </ul>
         </div>

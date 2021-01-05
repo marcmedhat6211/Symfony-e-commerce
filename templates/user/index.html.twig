@@ -1,0 +1,45 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+<br>
+<h2 style="text-align: center;">Users</h2>
+<br>
+{% for message in app.flashes('success') %}
+<div class="alert alert-success">
+    {{ message }}
+</div>
+{% endfor %}
+<a class="btn btn-success" style="float: right;" href="{{ path('user.create') }}">Add User</a>
+<br><br>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.roles.0 == "ROLE_ADMIN" %}
+                        Admin
+                    {% else %}
+                        Normal User
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-success btn-sm" href="{{ path('user.show', {id: user.id}) }}">View</a>
+                    <a class="btn btn-primary btn-sm" href="{{ path('user.edit', {id: user.id}) }}">Edit</a>
+                    <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user ?')" href="{{ path('user.destroy', {id: user.id}) }}">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

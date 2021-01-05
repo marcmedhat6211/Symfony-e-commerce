@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<br><br>
+<div class="card">
+    <h2 style="text-align: center;"><strong>Name: </strong>{{ user.name }}</h2>
+    <h5><strong>Email: </strong>{{ user.email }}</h5>
+    <h6><strong>Role: </strong>
+        {% if user.roles.0 == "ROLE_ADMIN" %}
+            Admin
+        {% else %}
+            Normal User
+        {% endif %}
+    </h6>
+  </div>
+
+{% endblock %}

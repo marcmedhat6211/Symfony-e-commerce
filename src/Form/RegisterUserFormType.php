@@ -43,7 +43,7 @@ class RegisterUserFormType extends AbstractType
                     'required' => true,
                 )
             )
-            ->add('Register', SubmitType::class, [
+            ->add('Submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-success float-right'
                 ]
