@@ -29,8 +29,11 @@ class EditProductFormType extends AbstractType
             ->add('images', FileType::class, [
                 'mapped' => false,
                 'multiple' => true,
+                'required' => false,
                 'attr' => [
-                    'class' => 'custom-file-input'
+                    'type' => 'file',
+                    'class' => 'custom-file-input',
+                    'id' => 'customFile'
                 ]
             ])
             ->add('code')

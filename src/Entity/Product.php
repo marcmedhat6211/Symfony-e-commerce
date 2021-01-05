@@ -69,7 +69,7 @@ class Product
 
     /**
     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
-    * @Assert\NotBlank
+    *
     */
     private $image;
 
