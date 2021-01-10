@@ -34,12 +34,10 @@ class ProductController extends AbstractController
      */
     public function show(Product $product, ProductRepository $productRepository) {
         $images = $productRepository->getImages($product);
-        // $sizes = $productRepository->getSizes($product);
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'images' => $images,
-            // 'sizes' => $sizes
         ]);
     }
 
