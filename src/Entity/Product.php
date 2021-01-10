@@ -68,6 +68,11 @@ class Product
     private $category;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Accessory", mappedBy="product")
+     */
+    private $accessory;
+
+    /**
     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="product")
     *
     */
@@ -81,6 +86,7 @@ class Product
     public function __construct()
     {
         $this->image = new ArrayCollection();
+        $this->accessory = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -214,6 +220,36 @@ class Product
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Accessory[]
+     */
+    public function getAccessory(): Collection
+    {
+        return $this->accessory;
+    }
+
+    public function addAccessory(Accessory $accessory): self
+    {
+        if (!$this->accessory->contains($accessory)) {
+            $this->accessory[] = $accessory;
+            $accessory->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccessory(Accessory $accessory): self
+    {
+        if ($this->accessory->removeElement($accessory)) {
+            // set the owning side to null (unless already changed)
+            if ($accessory->getProduct() === $this) {
+                $accessory->setProduct(null);
+            }
+        }
 
         return $this;
     }

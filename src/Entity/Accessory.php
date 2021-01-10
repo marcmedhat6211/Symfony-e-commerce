@@ -27,6 +27,11 @@ class Accessory
      */
     private $stock;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="accessory")
+     */
+    private $product;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,18 @@ class Accessory
     public function setStock(?int $stock): self
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }
