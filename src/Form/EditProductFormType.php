@@ -4,11 +4,8 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Product;
-use App\Repository\ProductRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType as TypeIntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -38,24 +35,6 @@ class EditProductFormType extends AbstractType
             ])
             ->add('code')
             ->add('stock')
-            ->add('small', TypeIntegerType::class, [
-                'mapped' => false,
-                'attr' => [
-                    'placeholder' => 'Small Sizes Number'
-                ]
-            ])
-            ->add('medium', TypeIntegerType::class, [
-                'mapped' => false,
-                'attr' => [
-                    'placeholder' => 'Medium Sizes Number'
-                ]
-            ])
-            ->add('large', TypeIntegerType::class, [
-                'mapped' => false,
-                'attr' => [
-                    'placeholder' => 'Large Sizes Number'
-                ]
-            ])
             ->add('availability', CheckboxType::class, [
                 'data' => true
             ])

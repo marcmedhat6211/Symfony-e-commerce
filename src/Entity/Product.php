@@ -78,15 +78,9 @@ class Product
     */
     private $mainImage;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Size", mappedBy="product")
-     */
-    private $size;
-
     public function __construct()
     {
         $this->image = new ArrayCollection();
-        $this->size = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -208,36 +202,6 @@ class Product
     public function setMainImage(string $mainImage): self
     {
         $this->mainImage = $mainImage;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Size[]
-     */
-    public function getSize(): Collection
-    {
-        return $this->size;
-    }
-
-    public function addSize(Size $size): self
-    {
-        if (!$this->size->contains($size)) {
-            $this->size[] = $size;
-            $size->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSize(Size $size): self
-    {
-        if ($this->size->removeElement($size)) {
-            // set the owning side to null (unless already changed)
-            if ($size->getProduct() === $this) {
-                $size->setProduct(null);
-            }
-        }
 
         return $this;
     }

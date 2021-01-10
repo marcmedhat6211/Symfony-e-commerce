@@ -4,14 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Image;
 use App\Entity\Product;
-use App\Entity\Size;
 use App\Form\CreateProductFormType;
 use App\Form\EditProductFormType;
-use App\Repository\ImageRepository;
 use App\Repository\ProductRepository;
 use App\Services\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,12 +34,12 @@ class ProductController extends AbstractController
      */
     public function show(Product $product, ProductRepository $productRepository) {
         $images = $productRepository->getImages($product);
-        $sizes = $productRepository->getSizes($product);
+        // $sizes = $productRepository->getSizes($product);
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'images' => $images,
-            'sizes' => $sizes
+            // 'sizes' => $sizes
         ]);
     }
 
@@ -64,45 +61,24 @@ class ProductController extends AbstractController
             
             //getting images and sizes data from form
             $files = $form['images']->getData();
-            $small = $form['small']->getData();
-            $medium = $form['medium']->getData();
-            $large = $form['large']->getData();
 
-            //setting sizes values
-            $size = new Size();
-            $size->setSmall($small);
-            $size->setMedium($medium);
-            $size->setLarge($large);
-            $size->setProduct($product);
-            $sizesErrors = $validator->validate($size);
-
-            //if no errors in sizes fields
-            if(count($sizesErrors) == 0) {
-                $em->persist($size);
-                $mainImage = '';
-                foreach($files as $file) {
-                    $image = new Image();
-                    $fileName = $fileUploader->uploadFile($file);
-                    $mainImage = $fileName;
-                    $image->setImage($fileName);
-                    $image->setProduct($product);
-                    $em->persist($image);
-                }
-
-                //setting the main image that appears in the home page for the user
-                $product->setMainImage($mainImage);
-                $em->persist($product);
-                $em->flush();
-                $this->addFlash('success', 'Product added successfuly');
-
-                return $this->redirect($this->generateUrl('product.index'));
-            //if there are any form validation errors from sizes entity
-            } else {
-                return $this->render('product/create.html.twig', [
-                    'form' => $form->createView(),
-                    'sizesErrors' => $sizesErrors,
-                ]);
+            $mainImage = '';
+            foreach($files as $file) {
+                $image = new Image();
+                $fileName = $fileUploader->uploadFile($file);
+                $mainImage = $fileName;
+                $image->setImage($fileName);
+                $image->setProduct($product);
+                $em->persist($image);
             }
+
+            //setting the main image that appears in the home page for the user
+            $product->setMainImage($mainImage);
+            $em->persist($product);
+            $em->flush();
+            $this->addFlash('success', 'Product added successfuly');
+
+            return $this->redirect($this->generateUrl('product.index'));
         //if there are any form validation errors from products entity
         } else {
             return $this->render('product/create.html.twig', [
@@ -131,12 +107,6 @@ class ProductController extends AbstractController
         $form = $this->createForm(EditProductFormType::class, $product);
         $images = $productRepository->getImages($product);
 
-        //putting the old sizes data in the form
-        $sizes = $productRepository->getSizes($product);
-        $form["small"]->setData($sizes["small"]);
-        $form["medium"]->setData($sizes["medium"]);
-        $form["large"]->setData($sizes["large"]);
-
         $form->handleRequest($request);
 
         //getting the errors from validation
@@ -145,12 +115,6 @@ class ProductController extends AbstractController
         //checking if the form is submitted and valid
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
-            //editing size entity
-            $small = $form["small"]->getData();
-            $medium = $form["medium"]->getData();
-            $large = $form["large"]->getData();
-            $productRepository->editSizes($product, $small, $medium, $large);
 
             //editing image entity
             $files = $form['images']->getData();
