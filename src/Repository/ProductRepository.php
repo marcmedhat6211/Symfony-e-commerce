@@ -40,21 +40,6 @@ class ProductRepository extends ServiceEntityRepository
         return $images;
     }
 
-    public function getSizes(Product $product) {
-        $conn = $this->getEntityManager()->getConnection();
-        $id = $product->getId();
-        $sql = 'SELECT small, medium, large
-                FROM size s
-                WHERE s.product_id = :id'
-                ;
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        $arrays = $stmt->fetchAllAssociative();
-        $sizes = $arrays[0];
-
-        return $sizes;
-    }
-
     public function getProductsCategories(Category $category) {
         $conn = $this->getEntityManager()->getConnection();
         $id = $category->getId();
