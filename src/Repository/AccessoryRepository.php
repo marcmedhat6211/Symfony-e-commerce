@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Accessory;
+use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,15 @@ class AccessoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Accessory::class);
+    }
+
+    public function getProductAccessory(Product $product) {
+        $qb = $this->createQueryBuilder('a')
+        ->where('a.product = :product')
+        ->setParameter('product', $product)
+        ;
+        $query = $qb->getQuery();
+        return $query->execute();
     }
 
     // /**

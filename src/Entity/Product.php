@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\CategoryRepository;
+use App\Repository\ProductRepository;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -68,7 +69,8 @@ class Product
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Accessory", mappedBy="product")
+     * @ORM\OneToMany(targetEntity="App\Entity\Accessory", mappedBy="product", cascade={"remove"}, cascade={"persist"})
+     * JoinColumn(onDelete="CASCADE")
      */
     private $accessory;
 
@@ -196,34 +198,31 @@ class Product
         return $this;
     }
 
-    public function __toString() {
-        return $this->name;
-    }
-
+    
     public function getMainImage(): ?string
     {
         return $this->mainImage;
     }
-
+    
     public function setMainImage(string $mainImage): self
     {
         $this->mainImage = $mainImage;
-
+        
         return $this;
     }
-
+    
     public function getPrice(): ?float
     {
         return $this->price;
     }
-
+    
     public function setPrice(float $price): self
     {
         $this->price = $price;
-
+        
         return $this;
     }
-
+    
     /**
      * @return Collection|Accessory[]
      */
@@ -231,17 +230,17 @@ class Product
     {
         return $this->accessory;
     }
-
+    
     public function addAccessory(Accessory $accessory): self
     {
         if (!$this->accessory->contains($accessory)) {
             $this->accessory[] = $accessory;
             $accessory->setProduct($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeAccessory(Accessory $accessory): self
     {
         if ($this->accessory->removeElement($accessory)) {
@@ -250,7 +249,11 @@ class Product
                 $accessory->setProduct(null);
             }
         }
-
+        
         return $this;
+    }
+    
+    public function __toString() {
+        return $this->name;
     }
 }

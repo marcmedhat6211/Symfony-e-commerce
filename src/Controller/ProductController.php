@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Accessory;
 use App\Entity\Image;
 use App\Entity\Product;
 use App\Form\CreateProductFormType;
 use App\Form\EditProductFormType;
+use App\Repository\AccessoryRepository;
 use App\Repository\ProductRepository;
 use App\Services\FileUploader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,20 +49,28 @@ class ProductController extends AbstractController
     * @Route("admin/product/create", name="product.create")
     */
     public function create(Request $request, ValidatorInterface $validator, FileUploader $fileUploader) {
+        //getting the entity manager
+        $em = $this->getDoctrine()->getManager();
         $product = new Product();
+
+        //original accessories
+        $originalAccessory = new ArrayCollection();
+        foreach($product->getAccessory() as $accessory) {
+            $originalAccessory->add($accessory);
+        }
+
+        //creating the form
         $form = $this->createForm(CreateProductFormType::class, $product);
         $form->handleRequest($request);
 
-        //validating product entity
-        $errors = $validator->validate($product);
-
         if($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
-            
-            //getting images and sizes data from form
+            //setting product's values
+            $product->setName($form["name"]->getData());
+            $product->setDescription($form["description"]->getData());
+            $product->setCategory($form["category"]->getData());
+            $product->setPrice($form["price"]->getData());
+            //images
             $files = $form['images']->getData();
-
             $mainImage = '';
             foreach($files as $file) {
                 $image = new Image();
@@ -69,26 +80,33 @@ class ProductController extends AbstractController
                 $image->setProduct($product);
                 $em->persist($image);
             }
-
-            //setting the main image that appears in the home page for the user
             $product->setMainImage($mainImage);
+            //get rid of the ones that the user got rid of in the interface
+            foreach($originalAccessory as $accessory) {
+                if($product->getAccessory()->contains($accessory) == false) {
+                    $em->remove($accessory);
+                }
+            }
+            $product->setCode($form["code"]->getData());
+            $product->setStock($form["stock"]->getData());
+            $product->setAvailability($form["availability"]->getData());
+
+            // $em->clear();
             $em->persist($product);
             $em->flush();
-            $this->addFlash('success', 'Product added successfuly');
 
+            $this->addFlash('success', 'Product added successfuly');
             return $this->redirect($this->generateUrl('product.index'));
-        //if there are any form validation errors from products entity
         } else {
             return $this->render('product/create.html.twig', [
                 'form' => $form->createView(),
-                'errors' => $errors,
+                // 'errors' => $errors,
             ]);
         }
 
-        //rendering the create form once the create route is hit
         return $this-> render('product/create.html.twig', [
-            'form' => $form->createView()
-        ]);
+                'form' => $form->createView()
+            ]);
     }
 
 
@@ -144,12 +162,48 @@ class ProductController extends AbstractController
     /**
      * @Route("admin/product/destroy/{id}", name="product.destroy")
      */
-    public function destroy(Product $product) {
+    public function destroy(Product $product, AccessoryRepository $accessoryRepository) {
         $em = $this->getDoctrine()->getManager();
+        $accessories = $accessoryRepository->getProductAccessory($product);
+        foreach($accessories as $accessory) {
+            $em->remove($accessory);
+        }
         $em->remove($product);
         $em->flush();   
         $this->addFlash('success', 'Product deleted');
         
         return $this->redirect($this->generateUrl('product.index'));
+    }
+
+    /**
+     * @Route("search", name="product.search")
+     */
+    public function searchAction(Request $request, ProductRepository $productRepository) {
+        $requestString = $request->get('q');
+        $requestCode = $request->get('q');
+        $products = $productRepository->findEntitiesByName($requestString);
+        $productsByCode = $productRepository->findEntitiesByCode($requestCode);
+        // dd($productRepository->findEntitiesByCode('1234'));
+        if(!$products) {
+            $result['products']['error'] = "Product name not found";
+        } else {
+            $result['products'] = $this->getRealEntities($products);
+        }
+
+        if(!$productsByCode) {
+            $result['productsByCode']['error'] = "Product code not found";
+        } else {
+            $result['productsByCode'] = $this->getRealEntities($productsByCode);
+        }
+
+        return new Response(json_encode($result));
+    }
+
+    public function getRealEntities($products) {
+        foreach($products as $products) {
+            $realEntities[$products->getId()] = [$products->getName(), $products->getCode()];
+        }
+
+        return $realEntities;
     }
 }

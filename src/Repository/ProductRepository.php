@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Accessory;
 use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -94,6 +95,25 @@ class ProductRepository extends ServiceEntityRepository
         $product_id = $stmt->fetchAllAssociative();
 
         return $product_id;
+    }
+
+    public function findEntitiesByName($productName) {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.name = :productName')
+            ->setParameter('productName', $productName)
+        ;
+        $query = $qb->getQuery();
+        // dd($query->execute());
+        return $query->execute();
+    }
+
+    public function findEntitiesByCode($productCode) {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.code = :productCode')
+            ->setParameter('productCode', $productCode)
+        ;
+        $query = $qb->getQuery();
+        return $query->execute();
     }
 
     // /**

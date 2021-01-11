@@ -1,6 +1,13 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+<script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <script src="{{ asset('js/add_accessory.js') }}"></script>
+
+
     <br>
     <h2 style="text-align: center;">Create Product</h2>
     {% if sizesErrors is defined and sizesErrors|length > 0 %}
@@ -13,5 +20,28 @@
         </ul>
     </div>
     {% endif %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.category) }}
+        {{ form_row(form.price) }}
+        {{ form_row(form.images) }}
+        {{ form_row(form.code) }}
+        {{ form_row(form.stock) }}
+        {{ form_row(form.availability) }}
+        <div class="col-sm-8 col-sm-offset-2" id="accessories_list" data-prototype="{{ form_widget(form.accessory.vars.prototype)|e('html_attr') }}">
+            <h3>Accessories</h3>
+            <h6>Here you may add all your required sizes, colors, or the required description for your product</h6>
+            {% for row in form.accessory %}
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        {{ row.vars.value.title }}
+                    </div>
+                    {{ form_row(row) }}
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
 {% endblock %}
