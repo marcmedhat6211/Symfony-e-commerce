@@ -6,12 +6,6 @@
 <link rel="stylesheet" href="{{ asset('css/sidenav.css') }}">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<!-- getting the ids to use them in js file -->
-{% for product in products %}
-    <div hidden data-product-id="{{ product.id }}"></div>
-    <div hidden data-product-code="{{ product.code }}"></div>
-{% endfor %}
-
 <div class="sidenav">
     <h3 style="text-align: center;">Categories:</h3>
     {% for category in categories %}
@@ -35,7 +29,7 @@
                                 alt="products images">
                             <div class="single-new-arrival-bg-overlay"></div>
                         </div>
-                        <h4><a style="text-decoration: none;" data-product-name="{{ product.name }}" href="{{ path('product.show', {id: product.id}) }}">{{ product.name }}</a></h4>
+                        <h4><a style="text-decoration: none;" href="{{ path('product.show', {id: product.id}) }}">{{ product.name }}</a></h4>
                         <p class="arrival-product-price">${{ product.price }}</p>
                     </div>
                 </div>

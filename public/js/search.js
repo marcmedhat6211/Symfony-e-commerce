@@ -24,13 +24,13 @@ jQuery(document).ready(function () {
                             $.each(arr, function (id, value) {
                                 if (key === 'products') {
                                     if (id !== 'error') {
-                                        entitySelector.append('<li><a href="/product/show/' + id + '" style="decoration: none;">' + value[0] + '</a></li>');
+                                        entitySelector.append('<li><a href="/product/show/' + id + '" style="text-decoration: none; color: black;">' + value[0] + '</a></li>');
                                     } else {
                                         entitySelector.append('<li class="errorLi">' + value + '</li><br>');
                                     }
                                 } else if (key === 'productsByCode') {
                                     if (id !== 'error') {
-                                        codeSearch.append('<li><a href="/product/show/' + id + '" style="decoration: none;">' + value[0] + '</a></li>');
+                                        codeSearch.append('<li><a href="/product/show/' + id + '" style="text-decoration: none; color: black;">' + value[0] + '</a></li>');
                                     } else {
                                         codeSearch.append('<li class="errorLi">' + value + '</li><br>');
                                     }

@@ -9,10 +9,6 @@
     {{ message }}
 </div>
 {% endfor %}
-{% for product in products %}
-    <div hidden data-product-id="{{ product.id }}"></div>
-    <div hidden data-product-code="{{ product.code }}"></div>
-{% endfor %}
 <a class="btn btn-success" style="float: right;" href="{{ path('product.create') }}">Add product</a>
 <br><br>
 <table class="table table-hover">
@@ -31,7 +27,7 @@
         {% for product in products %}
             <tr>
                 <td>{{ product.category }}</td>
-                <td data-product-name="{{ product.name }}">{{ product.name }}</td>
+                <td>{{ product.name }}</td>
                 <td>${{ product.price }}</td>
                 <td>{{ product.code }}</td>
                 <td>{{ product.stock }}</td>

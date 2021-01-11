@@ -1,13 +1,6 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-<script
-            src="https://code.jquery.com/jquery-2.2.4.min.js"
-            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-            crossorigin="anonymous"></script>
-    <script src="{{ asset('js/add_accessory.js') }}"></script>
-
-
     <br>
     <h2 style="text-align: center;">Create Product</h2>
     {% if sizesErrors is defined and sizesErrors|length > 0 %}
