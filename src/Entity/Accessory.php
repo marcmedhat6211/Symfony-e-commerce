@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AccessoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AccessoryRepository::class)
@@ -19,11 +20,13 @@ class Accessory
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * 
      */
     private $title;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\PositiveOrZero
      */
     private $stock;
 

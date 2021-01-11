@@ -43,3 +43,24 @@ jQuery(document).ready(function () {
         }
     });
 });
+
+// $(document).ready(function() {
+//     var searchRequest = null;
+//     $('#search').keyup(function() {
+//         var that = this;
+//         $('#entitiesNav').html('');
+//         var searchField = $('#search').val();
+//         var expression = new RegExp(searchField, "i");
+//         searchRequest = $.ajax({
+//             type: "GET",
+//             url: "/search",
+//             data: {
+//                 'q': value
+//             },
+//             dataType: "text",
+//             success: function(msg) {
+//                 console.log(value);
+//             }
+//         });
+//     });
+// });

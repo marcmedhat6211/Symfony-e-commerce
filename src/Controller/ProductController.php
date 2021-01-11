@@ -65,6 +65,9 @@ class ProductController extends AbstractController
         $form = $this->createForm(CreateProductFormType::class, $product);
         $form->handleRequest($request);
 
+        //validation on product
+        $errors = $validator->validate($product);
+
         if($form->isSubmitted() && $form->isValid()) {
             //setting product's values
             $product->setName($form["name"]->getData());
@@ -93,16 +96,15 @@ class ProductController extends AbstractController
             $product->setStock($form["stock"]->getData());
             $product->setAvailability($form["availability"]->getData());
 
-            // $em->clear();
             $em->persist($product);
             $em->flush();
-
             $this->addFlash('success', 'Product added successfuly');
+
             return $this->redirect($this->generateUrl('product.index'));
         } else {
             return $this->render('product/create.html.twig', [
                 'form' => $form->createView(),
-                // 'errors' => $errors,
+                'errors' => $errors,
             ]);
         }
 
@@ -160,6 +162,7 @@ class ProductController extends AbstractController
 
             $em->flush();
             $this->addFlash('success', 'Product updated successfuly');
+
             return $this->redirect($this->generateUrl('product.index'));
         } else {
             return $this->render('product/edit.html.twig', [
@@ -199,7 +202,6 @@ class ProductController extends AbstractController
         $requestCode = $request->get('q');
         $products = $productRepository->findEntitiesByName($requestString);
         $productsByCode = $productRepository->findEntitiesByCode($requestCode);
-        // dd($productRepository->findEntitiesByCode('1234'));
         if(!$products) {
             $result['products']['error'] = "Product name not found";
         } else {
@@ -219,7 +221,7 @@ class ProductController extends AbstractController
         foreach($products as $products) {
             $realEntities[$products->getId()] = [$products->getName(), $products->getCode()];
         }
-
+        
         return $realEntities;
     }
 }

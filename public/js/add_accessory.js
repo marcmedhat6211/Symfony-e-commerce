@@ -53,7 +53,6 @@ function addNewForm() {
     $addNewItem.before($panel);
 }
 
-
 function addRemoveButton($panel) {
     //create remove button
     var $removeButton = $('<a href="#" class="btn btn-danger btn-sm">Remove</a>');

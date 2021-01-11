@@ -3,16 +3,6 @@
 {% block body %}
     <br>
     <h2 style="text-align: center;">Create Product</h2>
-    {% if sizesErrors is defined and sizesErrors|length > 0 %}
-    <div class="alert alert-danger">
-        <br>
-        <ul>
-            {% for error in sizesErrors %}
-                <li>{{ error.message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
     {{ form_start(form) }}
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
