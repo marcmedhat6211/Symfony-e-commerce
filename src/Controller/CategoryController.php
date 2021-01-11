@@ -67,7 +67,7 @@ class CategoryController extends AbstractController
         if($form->isSubmitted()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            $this->addFlash('success', 'Category Edited successfuly');
+            $this->addFlash('success', 'Category updated successfuly');
             return $this->redirect($this->generateUrl('category.index'));
         }
 

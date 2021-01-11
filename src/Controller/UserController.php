@@ -98,7 +98,7 @@ class UserController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
                 $em->flush();
-                $this->addFlash('success', 'User Edited successfuly');
+                $this->addFlash('success', 'User updated successfuly');
                 
                 //redirection page depending on the current authenticated user role
                 if($currentUserRole[0] == "ROLE_ADMIN") {

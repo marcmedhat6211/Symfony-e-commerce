@@ -120,6 +120,13 @@ class ProductController extends AbstractController
         ValidatorInterface $validator,
         FileUploader $fileUploader
         ) {
+        
+        //original accessories
+        $originalAccessory = new ArrayCollection();
+        foreach($product->getAccessory() as $accessory) {
+            $originalAccessory->add($accessory);
+        }
+        
         $form = $this->createForm(EditProductFormType::class, $product);
         $images = $productRepository->getImages($product);
 
@@ -142,8 +149,15 @@ class ProductController extends AbstractController
                 $em->persist($image);
             }
 
+             //get rid of the ones that the user got rid of in the interface
+            foreach($originalAccessory as $accessory) {
+                if($product->getAccessory()->contains($accessory) == false) {
+                    $em->remove($accessory);
+                }
+            }
+
             $em->flush();
-            $this->addFlash('success', 'Product Edited successfuly');
+            $this->addFlash('success', 'Product updated successfuly');
             return $this->redirect($this->generateUrl('product.index'));
         } else {
             return $this->render('product/edit.html.twig', [
