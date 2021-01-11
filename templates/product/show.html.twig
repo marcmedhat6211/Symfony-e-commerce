@@ -12,6 +12,12 @@
     <h6><strong>Product Code: </strong>{{ product.code }}</h6>
     <h6><strong>Left in stock: </strong>{{ product.stock }}</h6>
     <br>
+    <h3 style="text-align: center;">Accessories</h3>
+    {% for accessory in accessories %}
+      <h6><strong>Title: </strong>{{ accessory.title }}</h6>
+      <h6><strong>Stock: </strong>{{ accessory.stock }}</h6>
+    {% endfor %}
+    <br>
     <p>{{ product.description }}</p>
   </div>
 </div>

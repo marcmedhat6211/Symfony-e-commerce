@@ -35,12 +35,14 @@ class ProductController extends AbstractController
     /**
      * @Route("product/show/{id}", name="product.show")
      */
-    public function show(Product $product, ProductRepository $productRepository) {
+    public function show(Product $product, ProductRepository $productRepository, AccessoryRepository $accessoryRepository) {
         $images = $productRepository->getImages($product);
+        $accessories = $accessoryRepository->getProductAccessory($product);
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'images' => $images,
+            'accessories' => $accessories
         ]);
     }
 
