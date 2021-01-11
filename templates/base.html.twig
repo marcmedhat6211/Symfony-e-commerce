@@ -56,8 +56,18 @@
             </div>
             <input autofocus placeholder="Search by product's name or code..." class="form-control" type="text" name="search" id="search" autocomplete="off">
         </div>
-        <ul class="list-group" id="list"></ul>
-        <ul class="list-group" id="code_list"></ul>
+        <!-- <ul class="list-group" id="list"></ul>
+        <ul class="list-group" id="code_list"></ul> -->
+        <ul class="nav" id="side-menu">
+            <li>
+                <ul class="nav nav-second-level" id="entitiesNav"></ul>
+            </li>
+        </ul>
+        <ul class="nav" id="side-menu">
+            <li>
+                <ul class="nav nav-second-level" id="codeSearch"></ul>
+            </li>
+        </ul>
     </div>
     {% endif %}
 
@@ -66,8 +76,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="{{ asset('js/search_by_name.js') }}"></script>
-    <script src="{{ asset('js/search_by_code.js') }}"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 </body>
 
