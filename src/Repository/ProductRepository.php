@@ -99,18 +99,17 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findEntitiesByName($productName) {
         $qb = $this->createQueryBuilder('p')
-            ->where('p.name = :productName')
-            ->setParameter('productName', $productName)
+            ->where('p.name LIKE :productName')
+            ->setParameter('productName', '%' . $productName . '%')
         ;
         $query = $qb->getQuery();
-        // dd($query->execute());
         return $query->execute();
     }
 
     public function findEntitiesByCode($productCode) {
         $qb = $this->createQueryBuilder('p')
-            ->where('p.code = :productCode')
-            ->setParameter('productCode', $productCode)
+            ->where('p.code LIKE :productCode')
+            ->setParameter('productCode', '%' . $productCode . '%')
         ;
         $query = $qb->getQuery();
         return $query->execute();

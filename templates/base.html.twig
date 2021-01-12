@@ -45,38 +45,20 @@
     </nav>
     <br><br>
     <div class="container">
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div class="container">
-        <div class="input-group">
-            <div class="input-group-text">
-                <span class="input-group-text"> 
-                    <span class="fa fa-search"></span>
-                </span>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div align="center">
+                <input type="text" name="search" id="search" placeholder="Search by product's name or code..." class="form-control">
             </div>
-            <input autofocus placeholder="Search by product's name or code..." class="form-control" type="text" name="search" id="search">
-        </div>
-        <!-- <ul class="list-group" id="list"></ul>
-        <ul class="list-group" id="code_list"></ul> -->
-        <ul class="nav" id="side-menu">
-            <li>
-                <ul class="nav nav-second-level" id="entitiesNav"></ul>
-            </li>
-        </ul>
-        <ul class="nav" id="side-menu">
-            <li>
-                <ul class="nav nav-second-level" id="codeSearch"></ul>
-            </li>
-        </ul>
+            <ul class="list-group" id="result"></ul>
+        {% endif %}
+        {% block body %}{% endblock %}
     </div>
-    {% endif %}
-
-    {% block body %}{% endblock %}
     {% block javascripts %}{% endblock %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script> -->
     <script src="{{ asset('js/add_accessory.js') }}"></script>
     <script src="{{ asset('js/search.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
